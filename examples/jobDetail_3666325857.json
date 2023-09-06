@@ -1,0 +1,324 @@
+{
+    "dashEntityUrn": "urn:li:fsd_jobPosting:3666325857",
+    "companyDetails": {
+        "com.linkedin.voyager.deco.jobs.web.shared.WebCompactJobPostingCompany": {
+            "companyResolutionResult": {
+                "entityUrn": "urn:li:fs_normalized_company:5071314",
+                "name": "Hexagon Safety, Infrastructure & Geospatial",
+                "logo": {
+                    "image": {
+                        "com.linkedin.common.VectorImage": {
+                            "artifacts": [
+                                {
+                                    "width": 200,
+                                    "fileIdentifyingUrlPathSegment": "200_200/0/1562961237436?e=1701907200&v=beta&t=J6W7B6cBijDmFwjcLTRfGSEVzL9E-kzxFaH7B3DWzmo",
+                                    "expiresAt": 1701907200000,
+                                    "height": 200
+                                },
+                                {
+                                    "width": 100,
+                                    "fileIdentifyingUrlPathSegment": "100_100/0/1562961237436?e=1701907200&v=beta&t=1wJoa0eNOsxLpxKPlhWVtTcX3weXsJkjdQhRHLXlGac",
+                                    "expiresAt": 1701907200000,
+                                    "height": 100
+                                },
+                                {
+                                    "width": 400,
+                                    "fileIdentifyingUrlPathSegment": "400_400/0/1562961237436?e=1701907200&v=beta&t=jgjZyna3beAy5v6C4b1ftXtNgZ5plJJ25oJI_s3Fi7Y",
+                                    "expiresAt": 1701907200000,
+                                    "height": 400
+                                }
+                            ],
+                            "rootUrl": "https://media.licdn.com/dms/image/C560BAQHQtx2eGRkKEg/company-logo_"
+                        }
+                    },
+                    "type": "SQUARE_LOGO"
+                },
+                "$recipeType": "com.linkedin.voyager.deco.organization.shared.WebCompactCompany",
+                "universalName": "hexagon-sig",
+                "url": "https://www.linkedin.com/company/hexagon-sig"
+            },
+            "company": "urn:li:fs_normalized_company:5071314",
+            "$recipeType": "com.linkedin.voyager.deco.jobs.web.shared.WebCompactJobPostingCompany"
+        }
+    },
+    "jobState": "SUSPENDED",
+    "description": {
+        "attributes": [
+            {
+                "start": 15,
+                "length": 1,
+                "type": {
+                    "com.linkedin.pemberly.text.LineBreak": {}
+                },
+                "attributeKindUnion": {
+                    "lineBreak": {}
+                }
+            },
+            {
+                "start": 16,
+                "length": 1,
+                "type": {
+                    "com.linkedin.pemberly.text.LineBreak": {}
+                },
+                "attributeKindUnion": {
+                    "lineBreak": {}
+                }
+            },
+            {
+                "start": 0,
+                "length": 17,
+                "type": {
+                    "com.linkedin.pemberly.text.Bold": {}
+                },
+                "attributeKindUnion": {
+                    "bold": {}
+                }
+            },
+            {
+                "start": 81,
+                "length": 1,
+                "type": {
+                    "com.linkedin.pemberly.text.LineBreak": {}
+                },
+                "attributeKindUnion": {
+                    "lineBreak": {}
+                }
+            },
+            {
+                "start": 82,
+                "length": 1,
+                "type": {
+                    "com.linkedin.pemberly.text.LineBreak": {}
+                },
+                "attributeKindUnion": {
+                    "lineBreak": {}
+                }
+            },
+            {
+                "start": 100,
+                "length": 1,
+                "type": {
+                    "com.linkedin.pemberly.text.LineBreak": {}
+                },
+                "attributeKindUnion": {
+                    "lineBreak": {}
+                }
+            },
+            {
+                "start": 101,
+                "length": 96,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 197,
+                "length": 93,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 290,
+                "length": 71,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 361,
+                "length": 71,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 432,
+                "length": 64,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 496,
+                "length": 105,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 651,
+                "length": 1,
+                "type": {
+                    "com.linkedin.pemberly.text.LineBreak": {}
+                },
+                "attributeKindUnion": {
+                    "lineBreak": {}
+                }
+            },
+            {
+                "start": 652,
+                "length": 1,
+                "type": {
+                    "com.linkedin.pemberly.text.LineBreak": {}
+                },
+                "attributeKindUnion": {
+                    "lineBreak": {}
+                }
+            },
+            {
+                "start": 601,
+                "length": 52,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 101,
+                "length": 552,
+                "type": {
+                    "com.linkedin.pemberly.text.List": {
+                        "ordered": false
+                    }
+                },
+                "attributeKindUnion": {
+                    "list": {
+                        "ordered": false
+                    }
+                }
+            },
+            {
+                "start": 667,
+                "length": 1,
+                "type": {
+                    "com.linkedin.pemberly.text.LineBreak": {}
+                },
+                "attributeKindUnion": {
+                    "lineBreak": {}
+                }
+            },
+            {
+                "start": 653,
+                "length": 15,
+                "type": {
+                    "com.linkedin.pemberly.text.Bold": {}
+                },
+                "attributeKindUnion": {
+                    "bold": {}
+                }
+            },
+            {
+                "start": 668,
+                "length": 84,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 752,
+                "length": 62,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 814,
+                "length": 33,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 847,
+                "length": 118,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 965,
+                "length": 129,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 1094,
+                "length": 45,
+                "type": {
+                    "com.linkedin.pemberly.text.ListItem": {}
+                },
+                "attributeKindUnion": {
+                    "listItem": {}
+                }
+            },
+            {
+                "start": 668,
+                "length": 471,
+                "type": {
+                    "com.linkedin.pemberly.text.List": {
+                        "ordered": false
+                    }
+                },
+                "attributeKindUnion": {
+                    "list": {
+                        "ordered": false
+                    }
+                }
+            }
+        ],
+        "text": "Job Description\n\nHexagon is seeking a Cloud Operations Engineer to join our team!\n\nResponsibilities:\n Providing technical assistance for cloud-based systems and resolving any operational problems.  Implementing system configuration, maintenance, and provisioning as per the set parameters.  Monitor System performance and recommend corrective action as needed.  Executing and troubleshooting SaaS application deployment procedures.  Maintaining cloud solutions in accordance with best practices.  Identifying, analyzing, and resolving infrastructure vulnerabilities and application deployment issues.  Running and updating pipelines in CI/CD systems. \n\nQualifications\n Minimum of 2 years experience and a degree in computer science or a similar field.  Experience in the field of cloud computing, Azure preferred.  Azure certifications preferred.  Working knowledge of at least one scripting or programming language (such as Python, PowerShell, Javascript, or C#).  Familiarity with network concepts and topics (such as domains, directories, DNS, HTTPS, firewalls, proxies, or load-balancing).  Good communication and collaboration skills."
+    },
+    "title": "Cloud Operations Engineer",
+    "entityUrn": "urn:li:fs_normalized_jobPosting:3666325857",
+    "workRemoteAllowed": false,
+    "applyMethod": {
+        "com.linkedin.voyager.jobs.OffsiteApply": {
+            "applyStartersPreferenceVoid": false,
+            "companyApplyUrl": "https://recruiting.adp.com/srccar/public/nghome.guid?c=1168251&d=ExternalCareerSiteSIG&prc=RMPOD3&r=5000971589500",
+            "inPageOffsiteApply": false
+        }
+    },
+    "talentHubJob": false,
+    "formattedLocation": "Madison, AL",
+    "workplaceTypes": [],
+    "listedAt": 1693886265000,
+    "jobPostingId": 3666325857,
+    "$recipeType": "com.linkedin.voyager.deco.jobs.web.shared.WebLightJobPosting"
+}
