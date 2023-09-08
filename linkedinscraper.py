@@ -1,6 +1,5 @@
 from linkedin_api import Linkedin
 import datetime
-import pytz
 import sqlite3
 import logging
 import json
@@ -12,11 +11,11 @@ class LinkedinScraper:
     def __init__(self, username, password, debug=False):
         logging.basicConfig(level=logging.DEBUG if debug else logging.INFO)
         self.logger = logger
-        self.linkedin = Linkedin(username, password, debug=debug)
         self._connect_db()
+        self.linkedin = Linkedin(username, password, debug=debug)
 
     def _connect_db(self):
-        self.connection = sqlite3.connect('jobPostDB.db')
+        self.connection = sqlite3.connect('linkedin_job_post_DB.db')
         self.cursor = self.connection.cursor()
         self.cursor.execute(
             '''
@@ -25,11 +24,9 @@ class LinkedinScraper:
                 id          INTEGER
                     constraint company_pk
                         primary key autoincrement,
-                companyId   TEXT not null,
-                companyName TEXT,
-                companyUrl  TEXT,
-                constraint company_pk2
-                    unique (companyId, id)
+                company_id   TEXT not null,
+                name TEXT,
+                url  TEXT
             );
             '''
         )
@@ -37,24 +34,23 @@ class LinkedinScraper:
 
         self.cursor.execute(
             '''
-            create table if not exists jobPost
+            create table if not exists job_post
             (
-                id            INTEGER
-                    constraint jobPost_pk
+                id              INTEGER
+                    constraint job_post_pk
                         primary key autoincrement,
-                jobId         TEXT not null,
-                jobUrl        TEXT,
-                title         TEXT,
-                companyId     INTEGER
-                    constraint jobPost_companyId_fk
+                post_id         TEXT not null,
+                url             TEXT,
+                title           TEXT,
+                company_id      INTEGER
+                    constraint job_post_company_id_fk
                         references company,
-                description   TEXT,
-                location      TEXT,
-                postTime      TEXT,
-                postTimeStamp INTEGER,
-                status        TEXT,
-                constraint jobPost_pk2
-                    unique (jobId, id)
+                description     TEXT,
+                location        TEXT,
+                timestamp       INTEGER,
+                status          TEXT,
+                keywords        TEXT,
+                search_location TEXT
             );
             '''
         )
@@ -62,30 +58,35 @@ class LinkedinScraper:
 
         self.cursor.execute(
             '''
-            create table if not exists log
-            (
-                id        INTEGER
-                    constraint log_pk
-                        primary key autoincrement,
-                timeStamp INTEGER,
-                jobPostId INTEGER not null
-                    constraint log_pk2
-                        unique
-                    constraint log_jobPost_id_fk
-                        references jobPost,
-                message   TEXT
-            );
+            create table if not exists logger
+        (
+            id        INTEGER
+                constraint log_pk
+                    primary key autoincrement,
+            timestamp INTEGER,
+            post_id   INTEGER not null
+                constraint logger_job_post_id_fk
+                    references job_post,
+            message   TEXT
+        );
             '''
         )
         self.connection.commit()
 
-    def _get_company_id(self, company_id: str, company_name: str, company_url: str) -> int:
-        self.cursor.execute("SELECT id FROM company WHERE companyId = ? AND companyName = ? AND companyUrl = ?;",
-                            (company_id, company_name, company_url))
+        self.cursor.execute('''
+        CREATE VIEW if not exists job_post_view as
+        select job_post.id, job_post.url, title, description, c.name as company_name, location, timestamp, status, keywords, search_location from job_post 
+        left join company c on c.id = job_post.company_id order by timestamp desc;
+        ''')
+        self.connection.commit()
+
+    def _get_company_id(self, company_id: str, name: str, url: str) -> int:
+        self.cursor.execute("SELECT id FROM company WHERE company_id = ? AND name = ? AND url = ?;",
+                            (company_id, name, url))
         row = self.cursor.fetchone()
         if row is None:
-            self.cursor.execute("INSERT INTO company (companyId, companyName, companyUrl) VALUES (?, ?, ?);",
-                                (company_id, company_name, company_url))
+            self.cursor.execute("INSERT INTO company (company_id, name, url) VALUES (?, ?, ?);",
+                                (company_id, name, url))
             self.connection.commit()
             company_row_id = self.cursor.lastrowid
         else:
@@ -94,38 +95,39 @@ class LinkedinScraper:
         return company_row_id
 
     def _get_job_post(self, job_id: str) -> list:
-        self.cursor.execute("SELECT * FROM jobPost WHERE jobId = ?", (job_id,))
+        self.cursor.execute("SELECT * FROM job_post WHERE post_id = ?", (job_id,))
         return self.cursor.fetchall()
 
     def _insert_job_post(self, job_detail):
         if job_detail["status"] == "fail":
             return
 
-        company_details = job_detail["companyDetails"]
-        company_id = self._get_company_id(company_details["companyId"],
-                                          company_details["companyName"],
-                                          company_details["companyUrl"])
+        company_details = job_detail["company_details"]
+        company_id = self._get_company_id(company_details["company_id"],
+                                          company_details["name"],
+                                          company_details["url"])
         # check if post exist
-        self.cursor.execute("SELECT * FROM jobPost WHERE jobId = ?", (job_detail["jobId"],))
-        rows = self.cursor.fetchall()
+        self.cursor.execute("SELECT * FROM job_post WHERE post_id = ?", (job_detail["post_id"],))
+        rows = self.cursor.fetchone()
         if not rows:
             self._insert_job_post_row(job_detail, company_id)
 
     def _insert_job_post_row(self, job_detail, company_id) -> int:
         sql = '''
-            insert into jobPost (jobId, jobUrl, title, companyId, description, location, postTime, postTimeStamp, status) 
-            values (?,?,?,?,?,?,?,?,?);
+            insert into job_post (post_id, url, title, company_id, description, location, timestamp, status, keywords, search_location) 
+            values (?,?,?,?,?,?,?,?,?,?);
         '''
         self.cursor.execute(sql, [
-            job_detail["jobId"],
-            job_detail["jobUrl"],
+            job_detail["post_id"],
+            job_detail["url"],
             job_detail["title"],
             company_id,
             job_detail["description"],
             job_detail["location"],
-            job_detail["postTime"],
-            job_detail["postTimeStamp"],
-            job_detail["status"]
+            job_detail["timestamp"],
+            job_detail["status"],
+            job_detail["keywords"],
+            job_detail["search_location"]
         ]
                             )
         self.connection.commit()
@@ -133,7 +135,7 @@ class LinkedinScraper:
 
     def _insert_log(self, job_id: int, message: str):
         sql = '''
-        insert into main.log ("timeStamp", jobPostId, message)
+        insert into logger ("timestamp", post_id, message)
         values (?,?,?);
         '''
         self.cursor.execute(sql, (int(datetime.datetime.now().timestamp()), job_id, message))
@@ -147,50 +149,44 @@ class LinkedinScraper:
         job_details = []
 
         for job in jobs:
-            job_id = job['entityUrn'].split(':')[-1]  # "trackingUrn": "urn:li:jobPosting:3648431448"
+            post_id = job['entityUrn'].split(':')[-1]  # "trackingUrn": "urn:li:jobPosting:3648431448"
             # check if post exist
-            if self._get_job_post(job_id):
-                self.logger.debug("job id {} exist".format(job_id))
+            if self._get_job_post(post_id):
+                self.logger.debug("post id {} exist".format(post_id))
                 continue
 
-            job_detail = {
-                "jobId": job_id,
+            job_post_detail = {
+                "post_id": post_id,
+                "keywords": keywords,
+                "search_location": location_name,
                 "status": "fail"
             }
             try:
-                job_detail_data = self.linkedin.get_job(job_id)
+                job_detail_data = self.linkedin.get_job(post_id)
 
                 company_details = job_detail_data["companyDetails"][
                     "com.linkedin.voyager.deco.jobs.web.shared.WebCompactJobPostingCompany"]["companyResolutionResult"]
 
-                job_url = "https://www.linkedin.com/jobs/view/{}/".format(job_id)
-
-                listed_time = datetime.datetime.fromtimestamp(job_detail_data["listedAt"] / 1000)
-                pdt_tz = pytz.timezone('America/Los_Angeles')
-                pdt_dt = pdt_tz.localize(listed_time)
-                pdt_str = pdt_dt.strftime('%Y-%m-%d %H:%M:%S %Z')
-
-                job_detail.update({
+                job_post_detail.update({
                     "status": "success",
-                    "jobUrl": job_url,
-                    "companyDetails": {
-                        "companyId": company_details["entityUrn"],
-                        "companyName": company_details["name"],
-                        "companyUrl": company_details["url"]
+                    "url": "https://www.linkedin.com/jobs/view/{}/".format(post_id),
+                    "company_details": {
+                        "company_id": company_details["entityUrn"],
+                        "name": company_details["name"],
+                        "url": company_details["url"]
                     },
                     "location": job_detail_data["formattedLocation"],
                     "description": job_detail_data["description"]["text"],
                     "title": job_detail_data["title"],
-                    "postTime": pdt_str,
-                    "postTimeStamp": listed_time.timestamp()
+                    "timestamp": int(job_detail_data["listedAt"] / 1000)
                 })
             except Exception as e:
-                self.logger.error("fail when get job detail id: {}, error: {}".format(job_id, e))
-                self._insert_log(job_id, str(e))
+                self.logger.error("fail when get job detail id: {}, error: {}".format(post_id, e))
+                self._insert_log(post_id, str(e))
             finally:
-                self.logger.debug("{} get job detail id: {}".format(job_detail["status"], job_id))
-                self._insert_job_post(job_detail)
-                job_details.append(job_detail)
+                self.logger.debug("{} get job detail id: {}".format(job_post_detail["status"], post_id))
+                self._insert_job_post(job_post_detail)
+                job_details.append(job_post_detail)
         return job_details
 
 
@@ -198,4 +194,5 @@ with open("credentials.json", "r") as f:
     credentials = json.load(f)
 
 scraper = LinkedinScraper(credentials["username"], credentials["password"], debug=True)
-scraper.search_jobs(limit=200)
+scraper.search_jobs(limit=100)
+scraper.search_jobs(location_name="seattle", limit=100)
