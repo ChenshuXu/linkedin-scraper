@@ -28,7 +28,7 @@ def get_db():
         db.close()
 
 
-@app.post("/job_post_update/", response_model=schemas.JobPost)
+@app.post("/job_post_update/", response_model=schemas.JobPostView)
 def update_job_post(job_post: schemas.JobPostUpdate, db: Session = Depends(get_db)):
     return crud.update_job_post(db, job_post.id, job_post.status)
 

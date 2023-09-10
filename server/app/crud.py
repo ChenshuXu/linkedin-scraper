@@ -10,7 +10,7 @@ def update_job_post(db: Session, job_post_id: int, status: str):
     job_post = db.query(models.JobPost).filter(models.JobPost.id == job_post_id).first()
     job_post.status = status
     db.commit()
-    updated_job_post = db.query(models.JobPost).filter(models.JobPost.id == job_post_id).first()
+    updated_job_post = db.query(models.JobPostView).filter(models.JobPostView.id == job_post_id).first()
     return updated_job_post
 
 
