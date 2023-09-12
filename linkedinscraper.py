@@ -194,5 +194,5 @@ with open("credentials.json", "r") as f:
     credentials = json.load(f)
 
 scraper = LinkedinScraper(credentials["username"], credentials["password"], debug=True)
-scraper.search_jobs(limit=100)
-scraper.search_jobs(location_name="seattle", limit=100)
+scraper.search_jobs(listed_at=24 * 60 * 60, limit=400)
+scraper.search_jobs(location_name="seattle", listed_at=24 * 60 * 60, limit=400)

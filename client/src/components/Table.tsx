@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,32 +9,18 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextHighlighter from "./TextHighlighter";
+import Status from "./Status";
+import {fetchJobPosts} from "../api/apiServices";
+import {JobPost} from "../api/schema";
 
-interface JobPost {
-    id: number
-    url: string
-    title: string
-    description: string
-    company_name: string
-    location: string
-    timestamp: number
-    status: string
-    keywords: string
-    search_location: string
-}
 
 export default function BasicTable(): React.JSX.Element {
-    const [data, setData] = useState<JobPost[]>([]);
+    const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
 
     useEffect(() => {
-        // Fetch data from the FastAPI server
-        axios.get<JobPost[]>("http://192.168.1.79:8000/job_post_all/?skip=0&limit=100")
-            .then((response) => {
-                setData(response.data);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-            });
+        fetchJobPosts().then((response) => {
+            setJobPosts(response);
+        })
     }, []);
 
 
@@ -55,9 +40,12 @@ export default function BasicTable(): React.JSX.Element {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map((row) => (
+                        {jobPosts.map((row, index) => {
+
+                            return (
                             <TableRow
-                                key={row.id}
+                                key={index}
+                                style={ row.status==="deleted" ? {backgroundColor:"grey"} : {} }
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
@@ -65,7 +53,9 @@ export default function BasicTable(): React.JSX.Element {
                                 </TableCell>
                                 <TableCell>{row.company_name}</TableCell>
                                 <TableCell align="left">
-                                    <TextHighlighter text={row.description} />
+                                    <Typography variant="body2" gutterBottom>
+                                        <TextHighlighter text={row.description} />
+                                    </Typography>
                                 </TableCell>
                                 <TableCell>
                                     <Typography variant="body2" gutterBottom>
@@ -82,8 +72,13 @@ export default function BasicTable(): React.JSX.Element {
                                         {new Date(row.timestamp * 1000).toLocaleString()}
                                     </Typography>
                                 </TableCell>
+                                <TableCell>
+                                    <Status status={row.status} id={row.id} index={index} jobPosts={jobPosts} setJobPosts={setJobPosts}/>
+                                </TableCell>
+                                <TableCell>{row.status}</TableCell>
                             </TableRow>
-                        ))}
+                            )
+                        })}
                     </TableBody>
                 </Table>
             </TableContainer>

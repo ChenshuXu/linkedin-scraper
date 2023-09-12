@@ -1,24 +1,17 @@
 import React from 'react';
-import Typography from "@mui/material/Typography";
 
 interface Props {
     text: string;
 }
 
 const TextHighlighter: React.FC<Props> = ({text}) => {
-    let splitText: string[] = text.split(' ');
+    let splitText = text.split(' ').map((word, index) => (
+        <span key={index} style={word.match(/year/ig) ? { background: 'yellow' } : {} }>
+            {word}{' '}
+        </span>
+    ));
 
-    return (
-        <Typography variant="body2" gutterBottom>
-            {splitText.map((word: string) => {
-                if (word.match(/year/gi)) {
-                    return <a style={{background: 'yellow'}}>{word} </a>
-                } else {
-                    return <a>{word} </a>
-                }
-            })}
-        </Typography>
-    );
+    return (<React.Fragment>{splitText}</React.Fragment>);
 }
 
 export default TextHighlighter;
