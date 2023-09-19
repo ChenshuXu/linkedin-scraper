@@ -3,8 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from sqlalchemy.orm import Session
 
-from . import crud, models, schemas
-from .database import SessionLocal, engine
+from . import schemas
+from database import models, crud
+from database.database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -35,6 +36,12 @@ def update_job_post(job_post: schemas.JobPostUpdate, db: Session = Depends(get_d
 
 @app.get("/job_post_all/", response_model=list[schemas.JobPostView])
 def read_job_post_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    job_posts = crud.get_job_post_view(db, skip=skip, limit=limit)
+    job_posts = crud.get_job_post_recent(db, skip=skip, limit=limit)
+    return job_posts
+
+
+@app.get("/job_post_filtered/", response_model=list[schemas.JobPostView])
+def read_job_post_all(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    job_posts = crud.get_job_post_filtered(db, 0, skip=skip, limit=limit)
     return job_posts
 

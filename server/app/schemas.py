@@ -32,6 +32,7 @@ class JobPostView(BaseModel):
     status: str
     keywords: str
     search_location: str
+    priority: int
 
     class Config:
         orm_mode = True

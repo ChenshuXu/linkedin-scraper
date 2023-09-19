@@ -14,6 +14,16 @@ export const fetchJobPosts = async () => {
     }
 }
 
+export const fetchJobPostsFiltered = async () => {
+    try {
+        const response = await axios.get<JobPost[]>(`${API_BASE_URL}/job_post_filtered/?skip=0&limit=100`);
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        throw error;
+    }
+}
+
 export const updateJobPost = async (id: number, status: string) => {
     try {
         const response = await axios.post<JobPost>(`${API_BASE_URL}/job_post_update/`, { id, status });

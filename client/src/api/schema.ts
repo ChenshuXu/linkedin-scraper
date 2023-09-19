@@ -9,4 +9,5 @@ export interface JobPost {
     status: string
     keywords: string
     search_location: string
+    priority: number
 }

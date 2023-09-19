@@ -10,15 +10,15 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import TextHighlighter from "./TextHighlighter";
 import Status from "./Status";
-import {fetchJobPosts} from "../api/apiServices";
+import {fetchJobPosts, fetchJobPostsFiltered} from "../api/apiServices";
 import {JobPost} from "../api/schema";
 
 
-export default function BasicTable(): React.JSX.Element {
+export default function DataTable(): React.JSX.Element {
     const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
 
     useEffect(() => {
-        fetchJobPosts().then((response) => {
+        fetchJobPostsFiltered().then((response) => {
             setJobPosts(response);
         })
     }, []);
@@ -37,6 +37,7 @@ export default function BasicTable(): React.JSX.Element {
                             <TableCell>link</TableCell>
                             <TableCell>time</TableCell>
                             <TableCell>status</TableCell>
+                            <TableCell>priority</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -76,6 +77,7 @@ export default function BasicTable(): React.JSX.Element {
                                     <Status status={row.status} id={row.id} index={index} jobPosts={jobPosts} setJobPosts={setJobPosts}/>
                                 </TableCell>
                                 <TableCell>{row.status}</TableCell>
+                                <TableCell>{row.priority}</TableCell>
                             </TableRow>
                             )
                         })}
