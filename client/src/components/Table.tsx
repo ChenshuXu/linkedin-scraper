@@ -12,22 +12,96 @@ import TextHighlighter from "./TextHighlighter";
 import Status from "./Status";
 import {fetchJobPosts, fetchJobPostsFiltered} from "../api/apiServices";
 import {JobPost} from "../api/schema";
+import {Box, TableFooter, TablePagination, useTheme} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import {KeyboardArrowLeft, KeyboardArrowRight} from "@mui/icons-material";
+import FirstPageIcon from '@mui/icons-material/FirstPage';
+import LastPageIcon from '@mui/icons-material/LastPage';
+
+
+interface TablePaginationActionsProps {
+    count: number,
+    page: number;
+    rowsPerPage: number;
+    onPageChange: (
+        event: React.MouseEvent<HTMLButtonElement>,
+        newPage: number,
+    ) => void;
+}
+
+function TablePaginationActions(props: TablePaginationActionsProps) {
+    const theme = useTheme();
+    const { count, page, rowsPerPage, onPageChange } = props;
+
+    const handleFirstPageButtonClick = (
+        event: React.MouseEvent<HTMLButtonElement>,
+    ) => {
+        onPageChange(event, 0);
+    };
+
+    const handleBackButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        onPageChange(event, page - 1);
+    };
+
+    const handleNextButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        onPageChange(event, page + 1);
+    };
+
+    return (
+        <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+            <IconButton
+                onClick={handleFirstPageButtonClick}
+                disabled={page === 0}
+                aria-label="first page"
+            >
+                {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+            </IconButton>
+            <IconButton
+                onClick={handleBackButtonClick}
+                disabled={page === 0}
+                aria-label="previous page"
+            >
+                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+            </IconButton>
+            <IconButton
+                onClick={handleNextButtonClick}
+                aria-label="next page"
+            >
+                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+            </IconButton>
+        </Box>
+    );
+}
 
 
 export default function DataTable(): React.JSX.Element {
     const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [page, setPage] = React.useState(0);
 
     useEffect(() => {
-        fetchJobPostsFiltered().then((response) => {
+        fetchJobPostsFiltered(page, rowsPerPage).then((response) => {
             setJobPosts(response);
         })
-    }, []);
+    }, [page, rowsPerPage]);
 
+    const handleChangePage = (
+        event: React.MouseEvent<HTMLButtonElement> | null,
+        newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
         <div>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ minWidth: 650 }} aria-label="custom pagination table">
                     <TableHead>
                         <TableRow>
                             <TableCell>title</TableCell>
@@ -36,13 +110,13 @@ export default function DataTable(): React.JSX.Element {
                             <TableCell>location</TableCell>
                             <TableCell>link</TableCell>
                             <TableCell>time</TableCell>
+                            <TableCell></TableCell>
                             <TableCell>status</TableCell>
                             <TableCell>priority</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {jobPosts.map((row, index) => {
-
                             return (
                             <TableRow
                                 key={index}
@@ -82,8 +156,29 @@ export default function DataTable(): React.JSX.Element {
                             )
                         })}
                     </TableBody>
+                    <TableFooter>
+                        <TableRow>
+                            <TablePagination
+                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: 100 }]}
+                                colSpan={3}
+                                count={-1}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                SelectProps={{
+                                    inputProps: {
+                                        'aria-label': 'rows per page',
+                                    },
+                                    native: true,
+                                }}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                                ActionsComponent={TablePaginationActions}
+                            />
+                        </TableRow>
+                    </TableFooter>
                 </Table>
             </TableContainer>
+
         </div>
     );
 }

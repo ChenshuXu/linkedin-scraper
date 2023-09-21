@@ -6,12 +6,13 @@ import json
 
 logger = logging.getLogger(__name__)
 
+filter_company_id = [1, 45, 90]
 filter_words = ["senior", "site reliability", "sr.", "staff", "principle", "dev ops"]
-important_words = ["junior", "entry level", "associate"]
+important_words = ["junior", "jr", "jr.", "entry level", "associate"]
 
 
 def get_priority_of_job_post(job_post: models.JobPost, company: models.Company) -> int:
-    if company.name.lower() == "amazon":
+    if company.id in filter_company_id:
         return 0
 
     title = job_post.title.lower()

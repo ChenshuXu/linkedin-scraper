@@ -14,9 +14,9 @@ export const fetchJobPosts = async () => {
     }
 }
 
-export const fetchJobPostsFiltered = async () => {
+export const fetchJobPostsFiltered = async (page: number, rowsPerPage: number) => {
     try {
-        const response = await axios.get<JobPost[]>(`${API_BASE_URL}/job_post_filtered/?skip=0&limit=100`);
+        const response = await axios.get<JobPost[]>(`${API_BASE_URL}/job_post_filtered/?skip=${page*rowsPerPage}&limit=${rowsPerPage}`);
         return response.data;
     } catch (error) {
         console.error("Error fetching data:", error);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import IconButton from "@mui/material/IconButton";
@@ -16,8 +16,8 @@ interface Props {
 }
 
 const Status: React.FC<Props> = (props: Props) => {
-    const [applied, setApplied] = useState<boolean>(props.status === "applied");
-    const [deleted, setDeleted] = useState<boolean>(props.status === "deleted");
+    const applied = props.status === "applied";
+    const deleted = props.status === "deleted";
 
     const handleApplyClick = () => {
         if (!applied) {
@@ -31,7 +31,6 @@ const Status: React.FC<Props> = (props: Props) => {
                     updateRows(response);
                 });
         }
-        setApplied(!applied);
     }
 
     const handleDeleteClick = () => {
@@ -53,7 +52,6 @@ const Status: React.FC<Props> = (props: Props) => {
                     });
             }
         }
-        setDeleted(!deleted);
     }
 
     const updateRows = (newRow: JobPost) => {
